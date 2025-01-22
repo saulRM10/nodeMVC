@@ -8,10 +8,25 @@
   width: 210px;
   margin-top: 80px;
   position: fixed;
-  background-color: #fff;
+  background: linear-gradient(to top, #830aaf, #4238d5) !important;
   top: 0;
   left: 0;
   padding-top: 20px;
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.sidenav svg {
+  color: #830aaf;
+}
+
+.navItem {
+  color: white;
+  display: flex;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.navItem.selected {
+  background-color: white;
+  color: #830aaf;
 }
