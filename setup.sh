@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/bin/zsh
 
-# Install Homebrew
+# Step 1: Install Homebrew
+echo "----------------------------------------"
+echo "Step 1: Install Homebrew"
+echo "----------------------------------------"
 if ! command -v brew &> /dev/null
 then
     echo "Installing Homebrew..."
@@ -9,40 +12,46 @@ else
     echo "Homebrew is already installed."
 fi
 
-# Installing node and nvm
-echo "Installing node, nvm, and pnpm..."
-brew install node
-brew install nvm
+# Step 2: Install node, nvm, and pnpm
+echo "----------------------------------------"
+echo "Step 2: Install node, nvm, and pnpm"
+echo "----------------------------------------"
+echo "Checking if node, nvm, and pnpm are installed..."
+
+if ! command -v node &> /dev/null
+then
+    echo "Installing node..."
+    brew install node
+else
+    echo "Node is already installed."
+fi
+
+if ! command -v nvm &> /dev/null
+then
+    echo "Installing nvm..."
+    brew install nvm
+else
+    echo "NVM is already installed."
+fi
+
 if ! command -v pnpm &> /dev/null
 then
     echo "Installing pnpm..."
-    curl -fsSL https://get.pnpm.io/install.sh | sh -
+    brew install pnpm
 else
-    echo "pnpm is already installed."
+    echo "PNPM is already installed."
 fi
 
-# Install MySQL using Homebrew
-echo "Installing MySQL..."
-brew install mysql
+# Step 4: Source .zshrc file to capture install updates
+echo "----------------------------------------"
+echo "Step 3: Sourcing .zshrc file to capture install updates"
+echo "----------------------------------------"
+source ~/.zshrc
 
-# Start MySQL as a background service
-echo "Starting MySQL service..."
-brew services start mysql
-
-# Wait for MySQL service to start
-echo "Waiting for MySQL service to start..."
-sleep 3
-
-# Log into MySQL CLI and create the database
-echo "Logging into MySQL CLI and creating database 'test_db'..."
-mysql -u root -p <<EOF
-CREATE DATABASE IF NOT EXISTS test_db;
-EOF
-
-# Confirmation
-echo "Database 'test_db' created successfully."
-
-# Next we are going to install dependencies within server
+# Step 4: Install dependencies within server
+echo "----------------------------------------"
+echo "Step 4: Install dependencies within server"
+echo "----------------------------------------"
 echo "Fetching environment variables from AWS Secrets Manager...."
 
 cd server
@@ -58,7 +67,10 @@ pnpm install
 pnpm run create-dev-env
 
 cd ..
-# Check if .env file exists in server directory
+# Step 5: Check if .env files exist
+echo "----------------------------------------"
+echo "Step 5: Check if .env files exist in server and client directories"
+echo "----------------------------------------"
 if [ -f server/.env ]; then
     echo ".env file exists in server directory."
 else
@@ -67,17 +79,14 @@ else
 fi
 
 if [ -f client/.env ]; then
-    echo ".env file exists in server directory."
+    echo ".env file exists in client directory."
 else
-    echo ".env file does not exist in server directory."
+    echo ".env file does not exist in client directory."
     exit 1
 fi
 
-cd server
-echo "Migrating database..."
-npm run migrate
-
-cd ..
-
-echo "Building docker containers"
-docker-compose up --build -d
+# Step 6: Build docker containers
+echo "----------------------------------------"
+echo "Step 6: Build and run docker containers"
+echo "----------------------------------------"
+docker-compose up --build -d --no-cache
