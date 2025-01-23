@@ -7,8 +7,8 @@
     "create-staging-env": "node create-env.js staging",
     "coverage": "jest --coverage",
     "server": "nodemon app.js",
-    "test": "export TEST_DB_HOST='127.0.0.1' && NODE_ENV=testing jest --runInBand",
-    "migrate": "export DB_HOST='127.0.0.1' && npx sequelize db:migrate --config config/config.js"
+    "test": "NODE_ENV=testing jest --runInBand",
+    "migrate": "npx sequelize db:migrate --config config/config.js"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.675.0",

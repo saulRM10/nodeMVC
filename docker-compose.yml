@@ -8,13 +8,16 @@ services:
       dockerfile: server/Dockerfile
     ports:
       - "3000:3000"
-    command: npm run server
+    command: /bin/sh -c "npm run migrate && npm run server"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.server.rule=Host(`server.localhost`)"
       - "traefik.http.services.server.loadbalancer.server.port=3000"
+    depends_on:
+      db:
+        condition: service_healthy
 
   client:
     platform: linux/arm64
@@ -30,6 +33,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.client.rule=Host(`client.localhost`)"
       - "traefik.http.services.client.loadbalancer.server.port=80"
+    depends_on:
+      - server
 
   traefik:
     image: traefik:v2.10
@@ -42,3 +47,24 @@ services:
       - "8081:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: cascarita
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  mysql-data:
