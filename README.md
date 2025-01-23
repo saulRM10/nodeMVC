@@ -56,16 +56,21 @@ We have a setup script that will:
 
 - install necessary dependencies like `nvm`, `node`, `pnpm`, `mysql`, etc.
 - pull environment variables from AWS Secrets Manager
-- local database setup
 - build and run Docker containers
 
 ```bash
 make setup
 ```
 
+After this is finished make sure to stop any local `mysql` processes with:
+
+```bash
+brew services stop mysql
+```
+
 ## Other commands
 
 - `make database` to run the latest migrations
-- `make docker-restart` will restart the containers for effects to take effect
-- `make docker-build` to build new containers as needed
+- `make restart` will restart the containers for effects to take effect
+- `make build` to build new containers as needed
 - `make test` will run backend related tests using jest
