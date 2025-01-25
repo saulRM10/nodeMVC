@@ -1,0 +1,4 @@
+{
+  "watch": ["./"],
+  "ignore": ["./config/config.json"]
+}

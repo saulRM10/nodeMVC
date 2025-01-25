@@ -12,32 +12,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "group_id",
         targetKey: "id",
       });
-
-      User.belongsTo(models.Role, {
-        foreignKey: "role_id",
-        targetKey: "id",
-      });
-
       User.belongsTo(models.Language, {
         foreignKey: "language_id",
         targetKey: "id",
       });
-
       User.hasMany(models.Form, {
         foreignKey: "created_by",
         sourceKey: "id",
       });
-
       User.hasMany(models.Form, {
         foreignKey: "updated_by",
         sourceKey: "id",
       });
-
       User.hasMany(models.Games, {
         foreignKey: "created_by_id",
         sourceKey: "id",
       });
-
       User.hasMany(models.Games, {
         foreignKey: "updated_by_id",
         sourceKey: "id",
@@ -47,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "id",
       });
       User.hasMany(models.AuthCode, {
+        foreignKey: "user_id",
+        sourceKey: "id",
+      });
+      User.hasMany(models.UserRoles, {
         foreignKey: "user_id",
         sourceKey: "id",
       });
@@ -105,10 +99,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       group_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      role_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

@@ -45,9 +45,6 @@ describe.skip("User Routes", () => {
 
   it("should handle POST /register", async () => {
     const groupM = await TestDataGenerator.createDummyGroup("Salinas");
-    const roleM = await testDb.Role.create({
-      role_type: "Staff",
-    });
     const languageM = await testDb.Language.create({
       language: "English",
     });
@@ -59,7 +56,6 @@ describe.skip("User Routes", () => {
       picture:
         "https://static.wikia.nocookie.net/nicos-nextbots-fanmade/images/9/97/Uncannyfar.png/revision/latest?cb=20230629212454",
       group_id: groupM.id,
-      role_id: roleM.id,
       language_id: languageM.id,
     });
 
@@ -71,9 +67,6 @@ describe.skip("User Routes", () => {
 
   it("should handle POST /register, with no group id but full group data", async () => {
     //const groupM = await TestDataGenerator.createDummyGroup("Salinas");
-    const roleM = await testDb.Role.create({
-      role_type: "Staff",
-    });
     const languageM = await testDb.Language.create({
       language: "English",
     });
@@ -85,7 +78,6 @@ describe.skip("User Routes", () => {
       picture:
         "https://static.wikia.nocookie.net/nicos-nextbots-fanmade/images/9/97/Uncannyfar.png/revision/latest?cb=20230629212454",
       group_id: null,
-      role_id: roleM.id,
       language_id: languageM.id,
       name: "831Soccer",
       street_address: "4 Elm St",
@@ -102,9 +94,6 @@ describe.skip("User Routes", () => {
 
   it("should handle POST /register with non-unique email", async () => {
     const groupM = await TestDataGenerator.createDummyGroup("Salinas");
-    const roleM = await testDb.Role.create({
-      role_type: "Staff",
-    });
     const languageM = await testDb.Language.create({
       language: "English",
     });
@@ -116,7 +105,6 @@ describe.skip("User Routes", () => {
       picture:
         "https://static.wikia.nocookie.net/nicos-nextbots-fanmade/images/9/97/Uncannyfar.png/revision/latest?cb=20230629212454",
       group_id: groupM.id,
-      role_id: roleM.id,
       language_id: languageM.id,
     });
 
@@ -127,7 +115,6 @@ describe.skip("User Routes", () => {
       picture:
         "https://static.wikia.nocookie.net/nicos-nextbots-fanmade/images/9/97/Uncannyfar.png/revision/latest?cb=20230629212454",
       group_id: groupM.id,
-      role_id: roleM.id,
       language_id: languageM.id,
     });
 
@@ -139,9 +126,6 @@ describe.skip("User Routes", () => {
 
   it("should handle POST /register with an empty first name", async () => {
     const groupM = await TestDataGenerator.createDummyGroup("Salinas");
-    const roleM = await testDb.Role.create({
-      role_type: "Staff",
-    });
     const languageM = await testDb.Language.create({
       language: "English",
     });
@@ -153,7 +137,6 @@ describe.skip("User Routes", () => {
       picture:
         "https://static.wikia.nocookie.net/nicos-nextbots-fanmade/images/9/97/Uncannyfar.png/revision/latest?cb=20230629212454",
       group_id: groupM.id,
-      role_id: roleM.id,
       language_id: languageM.id,
     });
 
@@ -163,9 +146,6 @@ describe.skip("User Routes", () => {
 
   it("Testing updateUser function by updating user's language preference", async () => {
     const groupM = await TestDataGenerator.createDummyGroup("Sample Group");
-    const roleM = await testDb.Role.create({
-      role_type: "Staff",
-    });
     const languageM = await testDb.Language.create({
       language: "English",
     });
@@ -180,7 +160,6 @@ describe.skip("User Routes", () => {
       picture:
         "https://static.wikia.nocookie.net/nicos-nextbots-fanmade/images/9/97/Uncannyfar.png/revision/latest?cb=20230629212454",
       group_id: groupM.id,
-      role_id: roleM.id,
       language_id: languageM.id,
     });
 

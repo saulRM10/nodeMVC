@@ -2,7 +2,6 @@
 
 const fs = require("fs");
 const path = require("path");
-const Sequelize = require("sequelize");
 require("dotenv").config();
 
 const basename = path.basename(__filename);
@@ -12,11 +11,14 @@ const db = {};
 let sequelize;
 const dbConfig = require(__dirname + "/../config/config.js")[env];
 
+console.log("dbConfig", dbConfig);
+
+const Sequelize = require("sequelize");
 sequelize = new Sequelize(
   dbConfig.database,
   dbConfig.username,
   dbConfig.password,
-  dbConfig
+  dbConfig,
 );
 
 sequelize
@@ -41,7 +43,7 @@ fs.readdirSync(__dirname)
   .forEach((file) => {
     const model = require(path.join(__dirname, file))(
       sequelize,
-      Sequelize.DataTypes
+      Sequelize.DataTypes,
     );
     db[model.name] = model;
   });

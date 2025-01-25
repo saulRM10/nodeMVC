@@ -12,8 +12,7 @@ const StripeWebhooks = require("./routes/webhooks/stripe.webhooks");
 const morgan = require("morgan");
 
 const app = express();
-app.set("port", process.env.SERVER_PORT || 3001);
-app.use(express.static(path.join(__dirname, "../dist")));
+app.set("port", process.env.SERVER_PORT || 3000);
 
 app.get("/api/health", (req, res) => res.sendStatus(200));
 
@@ -74,10 +73,6 @@ app.use("/api/teams", TeamRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/api/forms", FormRoutes);
 app.use("/api/accounts", AccountRoutes);
-
-app.get("*", function (req, res) {
-  res.sendFile("index.html", { root: path.join(__dirname, "../dist") });
-});
 
 http.createServer(app).listen(app.get("port"), function () {
   console.log("Express server listening on port " + app.get("port"));

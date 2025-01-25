@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Role.hasMany(models.User, {
+      Role.hasMany(models.UserRoles, {
         foreignKey: "role_id",
         sourceKey: "id",
       });
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Role",
       createdAt: "created_at",
       updatedAt: "updated_at",
-    }
+    },
   );
   return Role;
 };
