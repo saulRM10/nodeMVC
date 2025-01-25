@@ -24,6 +24,7 @@ By using this Software, you agree to the terms and conditions stated herein. If 
 "use strict";
 
 const { User } = require("../models");
+const { userSchema, userNotFoundSchema } = require("../schemas/user.schema");
 const GroupController = require("./group.controller");
 const getUserInfoFromAuth0 = require("../utilityFunctions/auth0");
 
@@ -175,14 +176,14 @@ const UserController = function () {
       });
 
       if (user) {
-        return res.status(200).json(user);
+        const validatedUser = userSchema.parse(user);
+        return res.status(200).json(validatedUser);
       } else {
-        // TODO Not the best practice below. Was previously .status(404)
-        return res.json({
+        const notFoundResponse = userNotFoundSchema.parse({
           message: `User with email: '${email}' not found.`,
-          authorization: req.headers.authorization,
           isSigningUp: true,
         });
+        return res.status(404).json(notFoundResponse);
       }
     } catch (error) {
       console.error("Failed to fetch existing user:", error);
