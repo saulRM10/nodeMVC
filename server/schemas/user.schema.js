@@ -12,12 +12,20 @@ const userSchema = z.object({
   updated_at: z.date(),
 });
 
+const usersSchema = z.array(userSchema);
+
 const userNotFoundSchema = z.object({
   message: z.string(),
   isSigningUp: z.boolean(),
 });
 
+const userErrorMessageSchema = z.object({
+  message: z.string(),
+});
+
 module.exports = {
   userSchema,
   userNotFoundSchema,
+  usersSchema,
+  userErrorMessageSchema,
 };

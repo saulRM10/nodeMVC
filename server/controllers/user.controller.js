@@ -24,7 +24,12 @@ By using this Software, you agree to the terms and conditions stated herein. If 
 "use strict";
 
 const { User } = require("../models");
-const { userSchema, userNotFoundSchema } = require("../schemas/user.schema");
+const {
+  userSchema,
+  userNotFoundSchema,
+  usersSchema,
+  userErrorMessageSchema,
+} = require("../schemas/user.schema");
 const GroupController = require("./group.controller");
 const getUserInfoFromAuth0 = require("../utilityFunctions/auth0");
 
@@ -40,32 +45,29 @@ const UserController = function () {
     return userFound == null;
   };
 
-  var registerUser = async function (req, res, next) {
-    const { group_id, name, streetAddress, city, state, zipCode, logoUrl } =
-      req.body;
-
+  var registerUserFromAuth0 = async function (req, res, next) {
+    let { group_id } = req.params;
+    group_id = parseInt(group_id, 10);
     const userBasicInfo = await getUserInfoFromAuth0(req.headers.authorization);
 
-    let groupId = group_id;
-    // const groups = await GroupController.getGroupByName(name);
-    // groupId = groups[0].id;
+    // let group_id = groupId;
 
-    if (!groupId) {
-      try {
-        const newGroup = {
-          name: name,
-          street_address: streetAddress,
-          city,
-          state,
-          zip_code: zipCode,
-          logo_url: logoUrl,
-        };
+    // if (!group_id) {
+    //   try {
+    //     const newGroup = {
+    //       name: name,
+    //       street_address: streetAddress,
+    //       city,
+    //       state,
+    //       zip_code: zipCode,
+    //       logo_url: logoUrl,
+    //     };
 
-        groupId = await GroupController.createGroup(newGroup);
-      } catch (error) {
-        next(error);
-      }
-    }
+    //     group_id = await GroupController.createGroup(newGroup);
+    //   } catch (error) {
+    //     next(error);
+    //   }
+    // }
     const first_name =
       userBasicInfo.given_name ||
       (userBasicInfo.name ? userBasicInfo.name.split(" ")[0] : "");
@@ -82,7 +84,7 @@ const UserController = function () {
       email: userBasicInfo.email,
       picture: userBasicInfo.picture,
       language_id: 1,
-      group_id: groupId,
+      group_id: group_id,
     };
 
     try {
@@ -92,14 +94,16 @@ const UserController = function () {
       );
 
       if (!userFound) {
-        res.status(400);
-        throw new Error("email is not unique");
+        const errorMessage = `Email already exists within the group ${newUser.group_id}: ${newUser.email}`;
+        const message = userErrorMessageSchema.parse({ message: errorMessage });
+        return res.status(400).json(message);
       }
 
       await User.build(newUser).validate();
       const result = await User.create(newUser);
-
-      return res.status(201).json(result);
+      console.log("ARMANDO IS HERE: ", result);
+      const registeredUser = userSchema.parse(result.dataValues);
+      return res.status(201).json(registeredUser);
     } catch (error) {
       console.error(error);
       next(error);
@@ -204,22 +208,17 @@ const UserController = function () {
         where: {
           group_id: group_id,
         },
-        attributes: {
-          exclude: [
-            "password",
-            "created_at",
-            "updated_at",
-            "group_id",
-            "language_id",
-          ],
-        },
       });
 
       if (!users) {
         res.status(404);
         throw new Error(`no users were found with group id ${group_id}`);
       }
-      return res.status(200).json(users);
+
+      const usersInGroup = usersSchema.parse(
+        users.map((user) => userSchema.parse(user.dataValues)),
+      );
+      return res.status(200).json(usersInGroup);
     } catch (error) {
       next(error);
     }
@@ -313,7 +312,7 @@ const UserController = function () {
   };
 
   return {
-    registerUser,
+    registerUserFromAuth0,
     logInUser,
     getUserByUserId,
     updateUserById,

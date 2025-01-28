@@ -8,8 +8,9 @@
   "paths": {
     "/api/users": {
       "get": {
-        "operationId": "user_controller_fetch_user",
+        "operationId": "fetch_user",
         "summary": "Fetch User",
+        "description": "Get user details from email. Note will require authorization bearer token set.",
         "parameters": [
           {
             "in": "query",
@@ -43,7 +44,88 @@
             }
           }
         },
-        "description": "Get user details from email. Note will require Bearer Token set.",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/groups/{group_id}": {
+      "get": {
+        "operationId": "fetch_users_by_group_id",
+        "summary": "Fetch Users by Group ID",
+        "description": "Get users by group ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "group_id",
+            "required": true,
+            "schema": {
+              "title": "group_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserSchema"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found",
+            "content": {}
+          }
+        },
+        "tags": ["Users"]
+      },
+      "post": {
+        "operationId": "register_user_auth0",
+        "summary": "Register User from Auth0",
+        "description": "Register a new user from auth0 token. The authorization bearer token will be used to set attributes like first_name, last_name, email, picture, language_id (defaults to English) within our database.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "group_id",
+            "required": true,
+            "schema": {
+              "title": "group_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created (OK)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User already present!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
         "tags": ["Users"],
         "security": [
           {
@@ -100,6 +182,14 @@
           },
           "isSigningUp": {
             "type": "boolean"
+          }
+        }
+      },
+      "ErrorMessageSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
           }
         }
       }
