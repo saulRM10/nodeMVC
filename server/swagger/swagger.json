@@ -42,6 +42,16 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
           }
         },
         "tags": ["Users"],
@@ -50,6 +60,207 @@
             "BearerAuth": []
           }
         ]
+      },
+      "post": {
+        "operationId": "register_user",
+        "summary": "Register User Manually",
+        "description": "Register a user manually by specifying key attributes like first_name, email, group_id, and language_id. Note, password still needs to set up on Auth0 end.",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": ["Users"]
+      }
+    },
+    "/api/users/{user_id}": {
+      "get": {
+        "operationId": "get_users_by_user_id",
+        "summary": "Get users by user ID",
+        "description": "Get users by user ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "title": "user_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"]
+      },
+      "post": {
+        "operationId": "update_users_by_user_id",
+        "summary": "Update users by user ID",
+        "description": "Update users by user ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "title": "user_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": ["Users"]
+      },
+      "delete": {
+        "operationId": "delete_users_by_user_id",
+        "summary": "Delete users by user ID",
+        "description": "Delete users by user ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "title": "user_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failure to delete user (or other internal server error)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"]
       }
     },
     "/api/users/groups/{group_id}": {
@@ -85,6 +296,16 @@
           "404": {
             "description": "Group not found",
             "content": {}
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
           }
         },
         "tags": ["Users"]
@@ -124,6 +345,16 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
           }
         },
         "tags": ["Users"],
@@ -144,8 +375,7 @@
             "type": "integer"
           },
           "first_name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "last_name": {
             "type": "string",
@@ -184,6 +414,63 @@
             "type": "boolean"
           }
         }
+      },
+      "UpdateUserSchema": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "group_id": {
+            "type": "integer"
+          },
+          "language_id": {
+            "type": "integer"
+          },
+          "picture": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          }
+        },
+        "required": []
+      },
+      "RegisterUserSchema": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "group_id": {
+            "type": "integer"
+          },
+          "language_id": {
+            "type": "integer"
+          },
+          "picture": {
+            "type": "string",
+            "format": "url",
+            "nullable": true
+          }
+        },
+        "required": ["first_name", "email", "group_id", "language_id"]
       },
       "ErrorMessageSchema": {
         "type": "object",
