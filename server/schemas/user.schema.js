@@ -23,7 +23,7 @@ By using this Software, you agree to the terms and conditions stated herein. If 
 */
 const { z } = require("zod");
 
-const userSchema = z.object({
+const UserSchema = z.object({
   id: z.number(),
   first_name: z.string(),
   last_name: z.string().nullable(),
@@ -35,7 +35,7 @@ const userSchema = z.object({
   updated_at: z.date(),
 });
 
-const updateUserSchema = z.object({
+const UpdateUserSchema = z.object({
   first_name: z.string().nullable().optional(),
   last_name: z.string().nullable().optional(),
   email: z.string().email().optional(),
@@ -44,7 +44,7 @@ const updateUserSchema = z.object({
   picture: z.string().url().nullable().optional(),
 });
 
-const registerUserSchema = z.object({
+const RegisterUserSchema = z.object({
   first_name: z.string(),
   last_name: z.string().nullable().optional(),
   email: z.string().email(),
@@ -53,22 +53,17 @@ const registerUserSchema = z.object({
   picture: z.string().url().nullable().optional(),
 });
 
-const usersSchema = z.array(userSchema);
+const UsersSchema = z.array(UserSchema);
 
-const userNotFoundSchema = z.object({
+const UserNotFoundSchema = z.object({
   message: z.string(),
   isSigningUp: z.boolean(),
 });
 
-const userErrorMessageSchema = z.object({
-  message: z.string(),
-});
-
 module.exports = {
-  userSchema,
-  userNotFoundSchema,
-  usersSchema,
-  userErrorMessageSchema,
-  updateUserSchema,
-  registerUserSchema,
+  UserSchema,
+  UserNotFoundSchema,
+  UsersSchema,
+  UpdateUserSchema,
+  RegisterUserSchema,
 };

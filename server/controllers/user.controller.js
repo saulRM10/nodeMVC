@@ -25,14 +25,14 @@ By using this Software, you agree to the terms and conditions stated herein. If 
 
 const { User } = require("../models");
 const {
-  userSchema,
-  userNotFoundSchema,
-  usersSchema,
-  userErrorMessageSchema,
-  updateUserSchema,
-  registerUserSchema,
+  UserSchema,
+  UserNotFoundSchema,
+  UsersSchema,
+  UpdateUserSchema,
+  RegisterUserSchema,
 } = require("../schemas/user.schema");
-const GroupController = require("./group.controller");
+const { errorMessageSchema } = require("../schemas/utils.schema");
+// const GroupController = require("./group.controller");
 const getUserInfoFromAuth0 = require("../utilityFunctions/auth0");
 
 const UserController = function () {
@@ -66,19 +66,19 @@ const UserController = function () {
       });
 
       if (!users) {
-        const message = userErrorMessageSchema.parse({
+        const message = errorMessageSchema.parse({
           message: `No users were found within group with id: ${group_id}`,
         });
         return res.status(404).json(message);
       }
 
-      const usersInGroup = usersSchema.parse(
-        users.map((user) => userSchema.parse(user.dataValues)),
+      const usersInGroup = UsersSchema.parse(
+        users.map((user) => UserSchema.parse(user.dataValues)),
       );
       return res.status(200).json(usersInGroup);
     } catch (error) {
       console.error(error);
-      const message = userErrorMessageSchema.parse({
+      const message = errorMessageSchema.parse({
         message: error.message,
       });
       return res.status(500).json(message);
@@ -125,17 +125,17 @@ const UserController = function () {
 
       if (!userFound) {
         const errorMessage = `Email already exists within the group ${newUser.group_id}: ${newUser.email}`;
-        const message = userErrorMessageSchema.parse({ message: errorMessage });
+        const message = errorMessageSchema.parse({ message: errorMessage });
         return res.status(400).json(message);
       }
 
       await User.build(newUser).validate();
       const result = await User.create(newUser);
-      const registeredUser = userSchema.parse(result.dataValues);
+      const registeredUser = UserSchema.parse(result.dataValues);
       return res.status(201).json(registeredUser);
     } catch (error) {
       console.error(error);
-      const message = userErrorMessageSchema.parse({
+      const message = errorMessageSchema.parse({
         message: error.message,
       });
       return res.status(500).json(message);
@@ -145,7 +145,7 @@ const UserController = function () {
   /*
     GET /api/users/:id
   */
-  var getUserByUserId = async function (req, res, next) {
+  var getUser = async function (req, res, next) {
     try {
       let { user_id } = req.params;
       user_id = parseInt(user_id, 10);
@@ -156,16 +156,16 @@ const UserController = function () {
 
       const user = await User.findByPk(user_id);
       if (!user) {
-        const message = userErrorMessageSchema.parse({
+        const message = errorMessageSchema.parse({
           message: `No user was found with id: ${user_id}`,
         });
         return res.status(404).json(message);
       }
-      const foundUser = userSchema.parse(user.dataValues);
+      const foundUser = UserSchema.parse(user.dataValues);
       return res.status(200).json(foundUser);
     } catch (error) {
       console.error(error);
-      const message = userErrorMessageSchema.parse({
+      const message = errorMessageSchema.parse({
         message: error.message,
       });
       return res.status(500).json(message);
@@ -175,7 +175,7 @@ const UserController = function () {
   /*
     POST /api/users/:id
   */
-  var updateUserById = async function (req, res, next) {
+  var updateUser = async function (req, res, next) {
     try {
       let { user_id } = req.params;
       user_id = parseInt(user_id, 10);
@@ -187,13 +187,13 @@ const UserController = function () {
       let user = await User.findByPk(user_id);
 
       if (!user) {
-        const message = userErrorMessageSchema.parse({
+        const message = errorMessageSchema.parse({
           message: `No user was found with id: ${user_id}`,
         });
         return res.status(404).json(message);
       }
 
-      const parsedBody = updateUserSchema.parse(req.body);
+      const parsedBody = UpdateUserSchema.parse(req.body);
 
       Object.keys(parsedBody).forEach((key) => {
         user[key] = parsedBody[key] !== undefined ? parsedBody[key] : user[key];
@@ -201,11 +201,11 @@ const UserController = function () {
 
       await user.validate();
       user = await user.save();
-      const updatedUser = userSchema.parse(user.dataValues);
+      const updatedUser = UserSchema.parse(user.dataValues);
       res.status(200).json(updatedUser);
     } catch (error) {
       console.error(error);
-      const message = userErrorMessageSchema.parse({
+      const message = errorMessageSchema.parse({
         message: error.message,
       });
       return res.status(500).json(message);
@@ -215,7 +215,7 @@ const UserController = function () {
   /*
     DELETE /api/users/:id
   */
-  var deleteUserById = async function (req, res, next) {
+  var deleteUser = async function (req, res, next) {
     try {
       let { user_id } = req.params;
       user_id = parseInt(user_id, 10);
@@ -227,7 +227,7 @@ const UserController = function () {
       let user = await User.findByPk(user_id);
 
       if (!user) {
-        const message = userErrorMessageSchema.parse({
+        const message = errorMessageSchema.parse({
           message: `No user was found with id: ${user_id}`,
         });
         return res.status(404).json(message);
@@ -242,14 +242,14 @@ const UserController = function () {
       if (!deletedUser) {
         return res.status(204).json();
       } else {
-        const message = userErrorMessageSchema.parse({
+        const message = errorMessageSchema.parse({
           message: `Failure to delete user with id: ${user_id}`,
         });
         return res.status(500).json(message);
       }
     } catch (error) {
       console.error(error);
-      const message = userErrorMessageSchema.parse({
+      const message = errorMessageSchema.parse({
         message: error.message,
       });
       return res.status(500).json(message);
@@ -259,7 +259,7 @@ const UserController = function () {
   /*
     GET /api/users
    */
-  var fetchUser = async function (req, res, next) {
+  var getUserByEmail = async function (req, res, next) {
     try {
       // Access the email from the query parameters
       const email = req.query.email;
@@ -271,10 +271,10 @@ const UserController = function () {
       });
 
       if (user) {
-        const validatedUser = userSchema.parse(user);
+        const validatedUser = UserSchema.parse(user);
         return res.status(200).json(validatedUser);
       } else {
-        const notFoundResponse = userNotFoundSchema.parse({
+        const notFoundResponse = UserNotFoundSchema.parse({
           message: `User with email: '${email}' not found.`,
           isSigningUp: true,
         });
@@ -282,7 +282,7 @@ const UserController = function () {
       }
     } catch (error) {
       console.error(error);
-      const message = userErrorMessageSchema.parse({
+      const message = errorMessageSchema.parse({
         message: error.message,
       });
       return res.status(500).json(message);
@@ -294,14 +294,14 @@ const UserController = function () {
   */
   var addUser = async function (req, res, next) {
     try {
-      const parsedBody = registerUserSchema.parse(req.body);
+      const parsedBody = RegisterUserSchema.parse(req.body);
       const { first_name, last_name, email, group_id, language_id, picture } =
         parsedBody;
 
       // Check if email is unique within the group, so email can appear once per group but can appear across multiple groups
       const existingUser = await User.findOne({ where: { email, group_id } });
       if (existingUser) {
-        const message = userErrorMessageSchema.parse({
+        const message = errorMessageSchema.parse({
           message: `Email already exists within the group ${group_id}: ${email}`,
         });
         return res.status(400).json(message);
@@ -318,11 +318,11 @@ const UserController = function () {
 
       await User.build(newUser).validate();
       const result = await User.create(newUser);
-      const newUserCreated = userSchema.parse(result.dataValues);
+      const newUserCreated = UserSchema.parse(result.dataValues);
       return res.status(201).json(newUserCreated);
     } catch (error) {
       console.error(error);
-      const message = userErrorMessageSchema.parse({
+      const message = errorMessageSchema.parse({
         message: error.message,
       });
       return res.status(500).json(message);
@@ -331,12 +331,12 @@ const UserController = function () {
 
   return {
     registerUserFromAuth0,
-    getUserByUserId,
-    updateUserById,
+    getUser,
+    updateUser,
     getUsersByGroupId,
-    deleteUserById,
+    deleteUser,
     addUser,
-    fetchUser,
+    getUserByEmail,
   };
 };
 
