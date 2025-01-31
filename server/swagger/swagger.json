@@ -704,6 +704,344 @@
         },
         "tags": ["Teams"]
       }
+    },
+    "/api/seasons/leagues/{league_id}": {
+      "get": {
+        "operationId": "getSeasonsByLeagueId",
+        "summary": "Get Seasons by League ID",
+        "description": "Get seasons by league ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "league_id",
+            "required": true,
+            "schema": {
+              "title": "league_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SeasonSchema"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "League not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Seasons"]
+      }
+    },
+    "/api/seasons": {
+      "get": {
+        "operationId": "getAllSeasons",
+        "summary": "Get All Seasons",
+        "description": "Get all seasons where you can filter down with the isActive, leagueId, and name query parameters.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "isActive",
+            "required": false,
+            "schema": {
+              "title": "isActive",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "leagueId",
+            "required": false,
+            "schema": {
+              "title": "leagueId",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "title": "name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SeasonSchema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Seasons"]
+      },
+
+      "post": {
+        "operationId": "createSeason",
+        "summary": "Create Season",
+        "description": "Create a season.",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Season name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSeasonSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": ["Seasons"]
+      }
+    },
+    "/api/seasons/{season_id}": {
+      "get": {
+        "operationId": "getSeason",
+        "summary": "Get Season",
+        "description": "Get a season.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "season_id",
+            "required": true,
+            "schema": {
+              "title": "season_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Season not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Seasons"]
+      },
+      "put": {
+        "operationId": "updateSeason",
+        "summary": "Update Season",
+        "description": "Update a season.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "season_id",
+            "required": true,
+            "schema": {
+              "title": "season_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeasonSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Season not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Season with name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSeasonSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": ["Seasons"]
+      },
+      "delete": {
+        "operationId": "deleteSeason",
+        "summary": "Delete Season",
+        "description": "Delete a season.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "season_id",
+            "required": true,
+            "schema": {
+              "title": "season_id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Season not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure to delete season",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Seasons"]
+      }
     }
   },
   "components": {
@@ -886,6 +1224,90 @@
           }
         },
         "tags": ["Utility"]
+      },
+      "SeasonSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "league_id": {
+            "type": "integer"
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateSeasonSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "league_id": {
+            "type": "integer"
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["name", "league_id", "start_date", "end_date"],
+        "tags": ["Seasons"]
+      },
+      "UpdateSeasonSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "league_id": {
+            "type": "integer"
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [],
+        "tags": ["Seasons"]
       }
     },
     "securitySchemes": {
