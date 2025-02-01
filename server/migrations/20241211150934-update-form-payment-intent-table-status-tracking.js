@@ -3,6 +3,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const transaction = await queryInterface.sequelize.transaction();
+
     try {
       await queryInterface.addColumn("FormPaymentIntents", "stripe_pi_status", {
         type: Sequelize.STRING,
