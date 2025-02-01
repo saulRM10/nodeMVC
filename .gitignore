@@ -5,25 +5,15 @@ node_modules
 .DS_Store
 
 # Environment variables
-# .env
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-
-# Webpack
-# dist
-
-# Environment variables
 .env
 
 # Jest
 coverage
 
 # Build binaries not needed
-dist/*
+client/dist/*
 
+# Terraform related files
 terraform/.terraform/*
 terraform/.terraform.lock.hcl
 terraform/.terraform.tfstate.*

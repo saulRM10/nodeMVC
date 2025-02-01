@@ -3,13 +3,12 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json from the root
-COPY ./package.json ./package-lock.json ./nodemon.json ./.sequelizerc /.env ./
-COPY ./server /app/server
-COPY ./dist /app/dist
+COPY ./server/package.json ./server/package-lock.json ./
 
-RUN npm clean-install
+# Install dependencies
+RUN npm install
 
-EXPOSE 80
-EXPOSE 443
+# Copy the rest of the application files
+COPY ./server .
 
-CMD ["npm", "run", "server"]
+EXPOSE 3000
