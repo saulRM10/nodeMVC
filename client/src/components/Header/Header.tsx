@@ -1,23 +1,24 @@
 import { HomePageLogoIcon } from "../../assets/Icons";
-import styles from "./TopNav.module.css";
+import styles from "./Header.module.css";
 import { Text } from "@radix-ui/themes";
 import { Avatar } from "@radix-ui/themes";
 import { useAuth0 } from "@auth0/auth0-react";
 import LanguagePreferenceButton from "../LanguagePreferenceButton/LanguagePreferenceButton";
 
-const SideNav = () => {
+const Header = () => {
   const { user } = useAuth0();
 
   return (
-    <div className={styles["top-nav"]}>
-      <div className={styles["logo-con"]}>
+    <header className={styles.header}>
+      <div className={styles.logoContainer}>
         <span className={styles.logo}>
           <HomePageLogoIcon />
         </span>
-        <span className={styles["logo-text"]}>
+        <span className={styles.logoText}>
           <Text>cascarita</Text>
         </span>
       </div>
+
       <div className={styles["search-alert-con"]}>
         <div className={styles.language}>
           <LanguagePreferenceButton />
@@ -35,7 +36,7 @@ const SideNav = () => {
           </Text>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
-export default SideNav;
+export default Header;

@@ -1,14 +1,4 @@
 .page {
-  background-color: #fff;
-  width: -webkit-fill-available;
-  width: -moz-available;
-  margin-right: 35px;
-  border-radius: 6px;
-  height: 87dvh;
-  margin-bottom: 35px;
-  position: fixed;
-  padding: 30px;
-  overflow: hidden;
 }
 
 .title {

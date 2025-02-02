@@ -84,6 +84,7 @@ const Leagues = () => {
   }
 
   return (
+    // <Page title={t("title")}>
     <Page title={t("title")}>
       <div className={styles.filterSearch}>
         <div className={styles.dropdown}>
@@ -128,7 +129,8 @@ const Leagues = () => {
       ) : (
         <DashboardTable
           headers={[t("tableHeaders.name"), t("tableHeaders.options")]}
-          headerColor="light">
+          headerColor="light"
+        >
           {isLoading ? (
             <tr>
               <td>{t("loading")}</td>
@@ -148,7 +150,8 @@ const Leagues = () => {
                 <td className={styles.tableData}>
                   <DropdownMenuButton>
                     <DropdownMenuButton.Item
-                      onClick={() => handleEdit(league.name, league.id)}>
+                      onClick={() => handleEdit(league.name, league.id)}
+                    >
                       {t("edit")}
                     </DropdownMenuButton.Item>
 
@@ -157,7 +160,8 @@ const Leagues = () => {
                     />
 
                     <DropdownMenuButton.Item
-                      onClick={() => handleDelete(league.name, league.id)}>
+                      onClick={() => handleDelete(league.name, league.id)}
+                    >
                       {t("delete")}
                     </DropdownMenuButton.Item>
                   </DropdownMenuButton>
